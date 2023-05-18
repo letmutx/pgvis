@@ -1,0 +1,17 @@
+{
+  "packages": [
+    "go",
+    "graphviz",
+    "zsh"
+  ],
+  "shell": {
+    "init_hook": null,
+    "scripts": {
+      "gend3": "go run tables.go -t d3",
+      "gengv": "go run tables.go -t graphviz"
+    }
+  },
+  "nixpkgs": {
+    "commit": "f80ac848e3d6f0c12c52758c0f25c10c97ca3b62"
+  }
+}
