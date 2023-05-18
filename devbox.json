@@ -1,8 +1,7 @@
 {
   "packages": [
     "go",
-    "graphviz",
-    "zsh"
+    "graphviz"
   ],
   "shell": {
     "init_hook": null,
