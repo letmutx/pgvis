@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.8.4/dist/d3.min.js" integrity="sha256-tR9Xg1sd6LfKcAEOSAwZkP2ViVhzfdhy8CkM/BvQlmI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/neo4jd3@0.0.5/dist/js/neo4jd3.min.js" integrity="sha256-JO6Uuym1+d1Z4EoC6vOfCbnWc6R3JhVKhan0GVpxXd8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/neo4jd3@0.0.5/dist/css/neo4jd3.min.css" integrity="sha256-HdlUpjrCosEPqsShKheLaiJwt/O83KQ2+Q/Sho9dR1w=" crossorigin="anonymous">
+  </head>
+  <body>
+    <div id="graphContainer"></div>
+    <script type="text/javascript">
+
+    var data = JSON.parse('{{ .json }}');
+    // Initialize Neo4jd3
+    var neo4jd3 = new Neo4jd3('#graphContainer', {
+      highlight: [
+        {
+          class: 'Label1',
+          property: 'property1',
+          value: 'Value 1'
+        }
+      ],
+      icons: {
+        'Label1': 'icon-user',
+        'Label2': 'icon-book'
+      },
+      minCollision: 60,
+      neo4jData: {
+    "results": [
+        {
+            "columns": ["user", "entity"],
+            "data": [
+                {
+                    "graph": {
+                        "nodes": [
+                            {
+                                "id": "1",
+                                "labels": ["User"],
+                                "properties": {
+                                    "userId": "eisman"
+                                }
+                            },
+                            {
+                                "id": "8",
+                                "labels": ["Project"],
+                                "properties": {
+                                    "name": "neo4jd3",
+                                    "title": "neo4jd3.js",
+                                    "description": "Neo4j graph visualization using D3.js.",
+                                    "url": "https://eisman.github.io/neo4jd3"
+                                }
+                            }
+                        ],
+                        "relationships": [
+                            {
+                                "id": "7",
+                                "type": "DEVELOPES",
+                                "startNode": "1",
+                                "endNode": "8",
+                                "properties": {
+                                    "from": 1470002400000
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "errors": []
+},
+      nodeRadius: 25
+    });
+
+    neo4jd3.updateWithD3Data(data);
+
+    </script>
+  </body>
+</html>
