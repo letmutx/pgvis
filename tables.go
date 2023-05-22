@@ -26,7 +26,7 @@ func init() {
 
 type Graph interface {
 	Ext() string
-	AddNode(name string, weight int, area int64) error
+	AddNode(name string, weight int) error
 	AddEdge(from, to, relationName string) error
 	Draw(f io.Writer) error
 }
@@ -37,6 +37,7 @@ type Node struct {
 	Id         string         `json:"id"`
 	Labels     []string       `json:"labels"`
 	Properties map[string]any `json:"properties"`
+	NodeRadius int64          `json:"nodeRadius"`
 }
 
 type Relationship struct {
@@ -61,24 +62,29 @@ func (g *d3) Ext() string {
 	return ".html"
 }
 
-func (g *d3) AddNode(name string, weight int, area int64) error {
+func (g *d3) AddNode(name string, weight int) error {
 	g.Nodes = append(g.Nodes, &Node{
-		Id: name,
-    Labels: []string{},
-    Properties: map[string]any{},
-		//NodeRadius: area,
+		Id:         name,
+		Labels:     []string{name},
+		Properties: map[string]any{
+      "value": weight,
+    },
+		NodeRadius: int64(weight/2500),
 	})
 	return nil
 }
 
 func (g *d3) AddEdge(from, to, relationName string) error {
 	g.Relationships = append(g.Relationships, &Relationship{
-		Id:     fmt.Sprintf("%d", len(g.Relationships)),
-		Type:   relationName,
-		Source: from,
-		Target: to,
-    Labels: []string{},
-    Properties: map[string]any{},
+		Id:         fmt.Sprintf("%d", len(g.Relationships)),
+		Type:       relationName,
+		Source:     from,
+		Target:     to,
+		Labels:     []string{relationName},
+		Properties: map[string]any{
+      "from": from,
+      "to": to,
+    },
 	})
 	return nil
 }
@@ -107,7 +113,8 @@ func (g *graphViz) Ext() string {
 	return ".gv"
 }
 
-func (g *graphViz) AddNode(name string, weight int, area int64) error {
+func (g *graphViz) AddNode(name string, weight int) error {
+	area := int64(math.Log10(float64(weight)))
 	return g.AddVertex(name,
 		graph.VertexWeight(weight),
 		graph.VertexAttribute("comment", name),
@@ -176,9 +183,8 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error converting relation_size to integer: %s, err: %v", relationSize, err)
 		}
-		area := int64(math.Log10(float64(rsize)))
-		log.Println("Adding vertex:", tableName, "with weight:", rsize, "with area:", area)
-		err = g.AddNode(tableName, rsize, area)
+		log.Println("Adding vertex:", tableName, "with weight:", rsize)
+		err = g.AddNode(tableName, rsize)
 		if err != nil {
 			log.Fatalf("Error adding vertex: %s, err: %v", tableName, err)
 		}
