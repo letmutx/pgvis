@@ -14,6 +14,7 @@ import (
 
 	"github.com/dominikbraun/graph"
 	"github.com/dominikbraun/graph/draw"
+	humanize "github.com/dustin/go-humanize"
 )
 
 var filename = flag.String("f", "tables.csv", "Should contain a csv")
@@ -63,28 +64,29 @@ func (g *d3) Ext() string {
 }
 
 func (g *d3) AddNode(name string, weight int) error {
+	rad := 2 * math.Log(float64(weight))
 	g.Nodes = append(g.Nodes, &Node{
-		Id:         name,
-		Labels:     []string{name},
+		Id:     name,
+		Labels: []string{name},
 		Properties: map[string]any{
-      "value": weight,
-    },
-		NodeRadius: int64(weight/2500),
+			"size": humanize.IBytes(uint64(weight)),
+		},
+		NodeRadius: int64(rad),
 	})
 	return nil
 }
 
 func (g *d3) AddEdge(from, to, relationName string) error {
 	g.Relationships = append(g.Relationships, &Relationship{
-		Id:         fmt.Sprintf("%d", len(g.Relationships)),
-		Type:       relationName,
-		Source:     from,
-		Target:     to,
-		Labels:     []string{relationName},
+		Id:     fmt.Sprintf("%d", len(g.Relationships)),
+		Type:   relationName,
+		Source: from,
+		Target: to,
+		Labels: []string{relationName},
 		Properties: map[string]any{
-      "from": from,
-      "to": to,
-    },
+			"from": from,
+			"to":   to,
+		},
 	})
 	return nil
 }
