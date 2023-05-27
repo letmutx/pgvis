@@ -28,7 +28,6 @@
         neo4jData: undefined,
         neo4jDataUrl: undefined,
         nodeOutlineFillColor: undefined,
-        nodeRadius: 25,
         relationshipColor: '#a5abb6',
         zoomFit: false
       },
@@ -548,8 +547,8 @@
         //                           .force('y', d3.force().strength(0.002))
         .force('collide', d3.forceCollide().radius(function(d) {
           return options.minCollision;
-        }).iterations(2))
-        .force('charge', d3.forceManyBody())
+        }).iterations(5))
+        .force('charge', d3.forceManyBody().strength(-90))
         .force('link', d3.forceLink().id(function(d) {
           return d.id;
         }))
