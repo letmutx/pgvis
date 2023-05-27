@@ -64,14 +64,14 @@ func (g *d3) Ext() string {
 }
 
 func (g *d3) AddNode(name string, weight int) error {
-	rad := 2 * math.Log(float64(weight))
+	rad := math.Log10(float64(weight))
 	g.Nodes = append(g.Nodes, &Node{
 		Id:     name,
 		Labels: []string{name},
 		Properties: map[string]any{
 			"size": humanize.IBytes(uint64(weight)),
 		},
-		NodeRadius: int64(rad),
+		NodeRadius: int64(rad) * int64(rad),
 	})
 	return nil
 }
